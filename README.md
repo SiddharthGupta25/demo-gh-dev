@@ -9,7 +9,7 @@ The purpose of this project is to:
 * Explore GitHub Actions capabilities
 * Validate CI/CD workflow configurations
 * Test automated build, test, and deployment processes
-* Demonstrate workflow triggers and job execution
+* Demonstrate workflow triggers and job executionS
 
 ## Workflow Features
 

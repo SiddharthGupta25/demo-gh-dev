@@ -1,0 +1,16 @@
+name: Test Dispatch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Repo B
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.QA_TRIGGER_TOKEN }}
+          repository: SiddharthGupta25/demo-gh-qa
+          event-type: test-event
