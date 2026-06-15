@@ -17,7 +17,7 @@ jobs:
           # Use the PAT token you saved in the Dev repo secrets
           token: ${{ secrets.QA_REPO_TOKEN }}
           # The format must be: owner/repository-name
-          repository: your-github-username/qa-repo-name 
+          repository: SiddharthGupta25/demo-gh-qa 
           event-type: trigger-playwright-tests
           # Optional: Pass data from the PR to the QA repo if needed
           client-payload: '{"pr_number": "${{ github.event.pull_request.number }}", "sha": "${{ github.event.pull_request.head.sha }}"}'
