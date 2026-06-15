@@ -1,6 +1,6 @@
 # GitHub Actions POC
 
-This repository contains a Proof of Concept (POC) for GitHub Actions workflows.
+This repository contains a Proof of Concept (POC) for GitHub Actions workflows With Example.
 
 ## Overview
 
