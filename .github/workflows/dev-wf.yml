@@ -1,16 +1,23 @@
-name: Test Dispatch
+name: Trigger QA Tests On PR
 
 on:
-  workflow_dispatch:
+  pull_request:
+    branches:
+      - main
+      - master
+    types: [opened, synchronize, reopened]
 
 jobs:
-  test:
+  ping-qa-repo:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Trigger Repo B
+      - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v3
         with:
-          token: ${{ secrets.QA_TRIGGER_TOKEN }}
-          repository: SiddharthGupta25/demo-gh-qa
-          event-type: test-event
+          # Use the PAT token you saved in the Dev repo secrets
+          token: ${{ secrets.QA_REPO_TOKEN }}
+          # The format must be: owner/repository-name
+          repository: your-github-username/qa-repo-name 
+          event-type: trigger-playwright-tests
+          # Optional: Pass data from the PR to the QA repo if needed
+          client-payload: '{"pr_number": "${{ github.event.pull_request.number }}", "sha": "${{ github.event.pull_request.head.sha }}"}'
