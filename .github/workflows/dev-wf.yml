@@ -1,23 +1,35 @@
-name: Trigger QA Tests On PR
+name: Run Playwright Tests
 
+# Listen for the custom event from the Dev repo
 on:
-  pull_request:
-    branches:
-      - main
-      - master
-    types: [opened, synchronize, reopened]
+  repository_dispatch:
+    types: [trigger-playwright-tests]
 
 jobs:
-  ping-qa-repo:
+  run-tests:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v3
+      - name: Checkout QA Repo
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          # Use the PAT token you saved in the Dev repo secrets
-          token: ${{ secrets.QA_REPO_TOKEN }}
-          # The format must be: owner/repository-name
-          repository: SiddharthGupta25/demo-gh-qa 
-          event-type: trigger-playwright-tests
-          # Optional: Pass data from the PR to the QA repo if needed
-          client-payload: '{"pr_number": "${{ github.event.pull_request.number }}", "sha": "${{ github.event.pull_request.head.sha }}"}'
+          node-version: lts/*
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Playwright tests
+        run: |
+          if [ "${{ github.event.client_payload.environment }}" = "prod" ]; then
+            echo "Running Production Tests..."
+            npm run test:prod
+          elsePa
+            echo "Running QA Tests..."
+            npm run test:qa
+          fi
