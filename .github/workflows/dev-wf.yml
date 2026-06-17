@@ -6,6 +6,17 @@ on:
       - main
       - master
     types: [opened, synchronize, reopened]
+  
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Select the environment to run tests against'
+        required: true
+        default: 'qa'
+        type: choice
+        options:
+          - qa
+          - prod
 
 jobs:
   ping-qa-repo:
@@ -14,10 +25,12 @@ jobs:
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v3
         with:
-          # Use the PAT token you saved in the Dev repo secrets
           token: ${{ secrets.QA_REPO_TOKEN }}
-          # The format must be: owner/repository-name
           repository: SiddharthGupta25/demo-gh-qa 
           event-type: trigger-playwright-tests
-          # Optional: Pass data from the PR to the QA repo if needed
-          client-payload: '{"pr_number": "${{ github.event.pull_request.number }}", "sha": "${{ github.event.pull_request.head.sha }}"}'
+          client-payload: |
+            {
+              "environment": "${{ github.event.inputs.environment || 'qa' }}",
+              "pr_number": "${{ github.event.pull_request.number || 'manual' }}",
+              "sha": "${{ github.event.pull_request.head.sha || github.sha }}"
+            }
